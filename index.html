@@ -100,7 +100,7 @@ footer { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border
   <div class="tabs" id="tabs"></div>
 </header>
 <details class="recipes" id="recipes">
-  <summary><span>20 bowls — tap to highlight items</span></summary>
+  <summary><span>21 bowls — tap to highlight items</span></summary>
   <div class="recipes-grid" id="recipeGrid"></div>
 </details>
 <div class="budget-note">
@@ -145,15 +145,16 @@ const BOWLS = [
   {n:18,name:"Mushroom + spinach pasta + parmesan",style:"Italian"},
   {n:19,name:"Tofu banh mi bowl + pickled veg",style:"sriracha mayo"},
   {n:20,name:"Couscous salad + chicken + chickpeas + feta",style:"lemon-tahini"},
-  {n:21,name:"Pork yakisoba + cabbage + bean sprouts (sweet-savory sauce, Kewpie, pickled ginger)",style:"Japanese · ~25 min · TONIGHT"},
+  {n:21,name:"Crispy tofu yakisoba + cabbage + bean sprouts (Kewpie, pickled ginger) — serves 3",style:"Japanese · ~30 min · TONIGHT"},
 ];
 const ITEMS = [
-  {id:"l-yaki-noodle",store:"longos",section:"Tonight: Yakisoba bowl (#21)",name:"Yakisoba noodles, fresh (2–3 pack) — Asian aisle",price:5,bowls:[21]},
-  {id:"l-pork-belly",store:"longos",section:"Tonight: Yakisoba bowl (#21)",name:"Pork belly, sliced thin, ~1 lb (or sub chicken thigh)",price:14,bowls:[21]},
-  {id:"l-yaki-sauce",store:"longos",section:"Tonight: Yakisoba bowl (#21)",name:"Otafuku yakisoba sauce (bottle) — Asian aisle",price:7,bowls:[21]},
-  {id:"l-bean-sprout",store:"longos",section:"Tonight: Yakisoba bowl (#21)",name:"Bean sprouts, 1 bag",price:3,bowls:[21]},
-  {id:"l-kewpie",store:"longos",section:"Tonight: Yakisoba bowl (#21)",name:"Kewpie mayo (squeeze bottle) — Asian aisle",price:7,bowls:[21,"STAPLE"]},
-  {id:"l-beni",store:"longos",section:"Tonight: Yakisoba bowl (#21)",name:"Pickled red ginger / beni shoga (optional but great)",price:5,bowls:[21]},
+  {id:"l-yaki-noodle",store:"longos",section:"Tonight: Crispy Tofu Yakisoba (#21)",name:"Yakisoba noodles, fresh (1 pack — serves 3) — Asian aisle",price:5,bowls:[21]},
+  {id:"l-yaki-tofu",store:"longos",section:"Tonight: Crispy Tofu Yakisoba (#21)",name:"Extra-firm tofu, 1 block (14 oz) — TONIGHT'S protein",price:4,bowls:[21]},
+  {id:"l-bean-sprout",store:"longos",section:"Tonight: Crispy Tofu Yakisoba (#21)",name:"Bean sprouts, 1 bag",price:3,bowls:[21]},
+  {id:"l-worce",store:"longos",section:"Tonight: Crispy Tofu Yakisoba (#21)",name:"Worcestershire sauce (Lea & Perrins) — sauce base",price:5,bowls:[21,"STAPLE"]},
+  {id:"l-kewpie",store:"longos",section:"Tonight: Crispy Tofu Yakisoba (#21)",name:"Kewpie mayo (squeeze bottle) — Asian aisle",price:7,bowls:[21,"STAPLE"]},
+  {id:"l-beni",store:"longos",section:"Tonight: Crispy Tofu Yakisoba (#21)",name:"Pickled red ginger / beni shoga (optional but great)",price:5,bowls:[21]},
+  {id:"l-aonori",store:"longos",section:"Tonight: Crispy Tofu Yakisoba (#21)",name:"Aonori / fried shallots (optional toppings)",price:4,bowls:[21]},
   {id:"l-chk-thigh",store:"longos",section:"Proteins (pick 4 weekly)",name:"Chicken thighs, boneless skinless, 2 lb",price:16,bowls:[1,4,6,9,10,20]},
   {id:"l-beef-grnd",store:"longos",section:"Proteins (pick 4 weekly)",name:"Ground beef, medium, 1 lb",price:9,bowls:[13,16]},
   {id:"l-pork-tnd",store:"longos",section:"Proteins (pick 4 weekly)",name:"Pork tenderloin, 1 lb",price:11,bowls:[12,15]},
@@ -236,17 +237,17 @@ const ITEMS = [
   {id:"b-blkbn",store:"bulkbarn",section:"Beans & legumes",name:"Dried black beans, 500g",price:3,bowls:[9]},
   {id:"b-pine",store:"bulkbarn",section:"Nuts & seeds",name:"Pine nuts, 250g (pesto)",price:12,bowls:[18]},
   {id:"b-alm",store:"bulkbarn",section:"Nuts & seeds",name:"Almonds",price:8,bowls:["STAPLE"]},
-  {id:"b-sesame",store:"bulkbarn",section:"Nuts & seeds",name:"Sesame seeds",price:4,bowls:[3,7,8]},
+  {id:"b-sesame",store:"bulkbarn",section:"Nuts & seeds",name:"Sesame seeds",price:4,bowls:[3,7,8,21]},
   {id:"b-pump",store:"bulkbarn",section:"Nuts & seeds",name:"Pumpkin seeds",price:5,bowls:["STAPLE"]},
   {id:"b-spice",store:"bulkbarn",section:"Spices",name:"Spice restock pick",price:10,bowls:["STAPLE"]},
   {id:"h-tah",store:"healthyplanet",section:"Sauces & condiments",name:"Tahini (Kevala/Soom), 500g",price:14,bowls:[2,20]},
   {id:"h-har",store:"healthyplanet",section:"Sauces & condiments",name:"Harissa paste",price:9,bowls:[12]},
-  {id:"h-miso",store:"healthyplanet",section:"Sauces & condiments",name:"White miso paste, large",price:14,bowls:[7]},
+  {id:"h-miso",store:"healthyplanet",section:"Sauces & condiments",name:"White miso paste, large",price:14,bowls:[7,21]},
   {id:"h-goch",store:"healthyplanet",section:"Sauces & condiments",name:"Gochujang",price:9,bowls:[]},
   {id:"h-fish",store:"healthyplanet",section:"Sauces & condiments",name:"Fish sauce",price:8,bowls:[15,19]},
-  {id:"h-soy",store:"healthyplanet",section:"Sauces & condiments",name:"Low-sodium soy sauce",price:7,bowls:[1,3,7,8,11]},
-  {id:"h-rv",store:"healthyplanet",section:"Sauces & condiments",name:"Rice vinegar",price:6,bowls:[7,8,19]},
-  {id:"h-toas",store:"healthyplanet",section:"Sauces & condiments",name:"Toasted sesame oil",price:9,bowls:[1,3,7,8,11,15]},
+  {id:"h-soy",store:"healthyplanet",section:"Sauces & condiments",name:"Low-sodium soy sauce",price:7,bowls:[1,3,7,8,11,21]},
+  {id:"h-rv",store:"healthyplanet",section:"Sauces & condiments",name:"Rice vinegar",price:6,bowls:[7,8,19,21]},
+  {id:"h-toas",store:"healthyplanet",section:"Sauces & condiments",name:"Toasted sesame oil",price:9,bowls:[1,3,7,8,11,15,21]},
   {id:"h-coc",store:"healthyplanet",section:"Pantry",name:"Coconut milk, 4-pack",price:14,bowls:[6]},
   {id:"h-tom",store:"healthyplanet",section:"Pantry",name:"San Marzano canned tomatoes, 4 cans",price:14,bowls:[16,18]},
   {id:"s-local",store:"local",section:"Seasonal pick",name:"In-season local fruit/veg",price:30,bowls:["STAPLE"]},
