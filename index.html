@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#fafaf7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Bowls">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='40' fill='%231a1a1a'/><text x='50%25' y='58%25' font-size='110' text-anchor='middle' dominant-baseline='middle' font-family='-apple-system,BlinkMacSystemFont,sans-serif'>🍱</text></svg>">
+<link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text x='0' y='14' font-size='14'>🍱</text></svg>">
+<title>Bowl Shopping List</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; }
+body {
+  font: 15px/1.4 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+  color: #1a1a1a;
+  background: #fafaf7;
+  padding-bottom: calc(96px + env(safe-area-inset-bottom));
+  -webkit-text-size-adjust: 100%;
+}
+.wrap { max-width: 760px; margin: 0 auto; }
+header {
+  position: sticky; top: 0; z-index: 10;
+  background: #fafaf7;
+  padding: calc(14px + env(safe-area-inset-top)) 16px 10px;
+  border-bottom: 1px solid #e5e3dc;
+}
+h1 { font-size: 19px; font-weight: 700; margin: 0 0 6px; letter-spacing: -0.01em; }
+.sub { font-size: 13px; color: #6b6960; margin: 0; }
+.bar { display: flex; gap: 8px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
+.progress { flex: 1; min-width: 140px; height: 8px; background: #ebe9e1; border-radius: 4px; overflow: hidden; }
+.progress > span { display: block; height: 100%; background: linear-gradient(90deg, #6ba368, #4a8c47); transition: width .25s ease; }
+.progress-text { font-size: 12px; color: #6b6960; white-space: nowrap; }
+.tabs { display: flex; gap: 4px; overflow-x: auto; margin: 12px -16px 0; padding: 0 16px 4px; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { flex: 0 0 auto; padding: 8px 13px; border-radius: 999px; background: #fff; border: 1px solid #d9d6cd; font-size: 13px; font-weight: 500; color: #3a3a36; cursor: pointer; white-space: nowrap; transition: all .15s; }
+.tab:hover { border-color: #b8b4a8; }
+.tab.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+.tab .count { opacity: .65; font-weight: 400; margin-left: 4px; }
+.recipes { margin: 14px 16px 0; padding: 12px 14px; background: #fff; border: 1px solid #e5e3dc; border-radius: 10px; }
+.recipes summary { cursor: pointer; font-weight: 600; font-size: 14px; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+.recipes summary::-webkit-details-marker { display: none; }
+.recipes summary::after { content: "▸"; font-size: 11px; color: #8c8a80; transition: transform .15s; }
+.recipes[open] summary::after { transform: rotate(90deg); }
+.recipes-grid { display: grid; grid-template-columns: 1fr; gap: 6px; margin-top: 12px; }
+@media (min-width: 540px) { .recipes-grid { grid-template-columns: 1fr 1fr; } }
+.recipe { padding: 8px 10px; background: #faf8f1; border: 1px solid #ece9dd; border-radius: 8px; font-size: 13px; cursor: pointer; transition: all .12s; }
+.recipe:hover { border-color: #c9c4b3; }
+.recipe.active { background: #fff5d6; border-color: #d4b343; }
+.recipe-num { display: inline-block; width: 22px; font-weight: 700; color: #8c8a80; }
+.recipe-name { font-weight: 500; }
+.recipe-meta { display: block; margin-top: 2px; font-size: 11px; color: #8c8a80; }
+.section { margin: 16px 16px 0; }
+.section h2 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: #6b6960; margin: 0 0 8px; padding: 0 2px; display: flex; justify-content: space-between; align-items: baseline; }
+.section h2 .freq { font-size: 11px; font-weight: 500; }
+.list { background: #fff; border: 1px solid #e5e3dc; border-radius: 12px; overflow: hidden; }
+.subsec { padding: 6px 12px 4px; font-size: 11px; color: #8c8a80; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; background: #faf8f1; border-bottom: 1px solid #ece9dd; border-top: 1px solid #ece9dd; }
+.subsec:first-child { border-top: none; }
+.item { display: flex; align-items: flex-start; gap: 10px; padding: 11px 12px; border-top: 1px solid #f0eee6; cursor: pointer; transition: background .1s; }
+.item:first-of-type { border-top: none; }
+.item:active { background: #f5f3eb; }
+.item.dim { opacity: 0.35; }
+.item input[type=checkbox] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; min-width: 22px; border: 1.5px solid #b8b4a8; border-radius: 6px; margin: 0; cursor: pointer; position: relative; background: #fff; flex-shrink: 0; transition: all .12s; }
+.item input[type=checkbox]:checked { background: #4a8c47; border-color: #4a8c47; }
+.item input[type=checkbox]:checked::after { content: ""; position: absolute; left: 6px; top: 2px; width: 6px; height: 11px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.item-body { flex: 1; min-width: 0; }
+.item-row { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.item-name { font-weight: 500; font-size: 14.5px; color: #1a1a1a; }
+.item input:checked ~ .item-body .item-name { text-decoration: line-through; color: #8c8a80; }
+.item-price { font-variant-numeric: tabular-nums; font-size: 13px; color: #6b6960; white-space: nowrap; }
+.tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+.tag { font-size: 10.5px; font-weight: 600; padding: 2px 6px; border-radius: 4px; background: #ece9dd; color: #6b6960; font-variant-numeric: tabular-nums; }
+.tag.match { background: #d4b343; color: #2a1f00; }
+.tag.staple { background: #e0ebd9; color: #2d5028; }
+footer { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #d9d6cd; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 12px; z-index: 20; box-shadow: 0 -2px 12px rgba(0,0,0,0.04); }
+.stat { flex: 1; }
+.stat-num { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.stat-label { font-size: 11px; color: #6b6960; text-transform: uppercase; letter-spacing: 0.04em; }
+.btn { padding: 9px 14px; border-radius: 8px; border: 1px solid #d9d6cd; background: #fff; font: inherit; font-size: 13px; font-weight: 500; cursor: pointer; color: #3a3a36; transition: all .12s; }
+.btn:hover { background: #f5f3eb; }
+.btn:active { transform: scale(0.97); }
+.empty { padding: 32px 16px; text-align: center; color: #8c8a80; font-size: 13px; }
+.budget-note { margin: 14px 16px 0; padding: 11px 13px; background: #fff8e1; border: 1px solid #f0d878; border-radius: 10px; font-size: 12.5px; color: #5a4d1a; line-height: 1.5; }
+.budget-note strong { color: #2a1f00; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Bowl Shopping List</h1>
+  <p class="sub">21 bowls · 4-store rotation · ~$1,512/mo target</p>
+  <div class="bar">
+    <div class="progress"><span id="bar"></span></div>
+    <div class="progress-text" id="ptext">0 of 0 picked</div>
+  </div>
+  <div class="tabs" id="tabs"></div>
+</header>
+<details class="recipes" id="recipes">
+  <summary><span>20 bowls — tap to highlight items</span></summary>
+  <div class="recipes-grid" id="recipeGrid"></div>
+</details>
+<div class="budget-note">
+  <strong>How this works.</strong> Tap a bowl to highlight only the items it needs.
+  Tap a store tab to filter the list. Items show which bowls they feed
+  (<span class="tag staple">STAPLE</span> = used everywhere). Check off as you shop —
+  state persists on this device. Hit reset weekly.
+</div>
+<div id="content"></div>
+</div>
+<footer>
+  <div class="stat">
+    <div class="stat-num" id="costLeft">$0</div>
+    <div class="stat-label">Left to buy</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num" id="costTotal">$0</div>
+    <div class="stat-label">Trip total</div>
+  </div>
+  <button class="btn" id="resetBtn">Reset</button>
+</footer>
+<script>
+"use strict";
+const BOWLS = [
+  {n:1,name:"Chicken + jasmine rice + broccoli",style:"ginger-soy"},
+  {n:2,name:"Salmon + quinoa + asparagus",style:"lemon-tahini"},
+  {n:3,name:"Tofu + brown rice + bok choy",style:"peanut-sesame"},
+  {n:4,name:"Chicken souvlaki + couscous + cucumber",style:"tzatziki"},
+  {n:5,name:"Shrimp + farro + cherry tomato",style:"lemon-olive oil"},
+  {n:6,name:"Chicken curry + jasmine rice + cauliflower",style:"cilantro"},
+  {n:7,name:"Salmon teriyaki + soba + edamame",style:"sesame"},
+  {n:8,name:"Tofu poke + jasmine rice + cucumber",style:"sesame-soy"},
+  {n:9,name:"Chicken fajita + black beans + rice",style:"corn salsa"},
+  {n:10,name:"Mediterranean chicken + farro + spinach",style:"feta + olive"},
+  {n:11,name:"Beef stir-fry + jasmine rice + bok choy",style:"ginger-garlic"},
+  {n:12,name:"Pork tenderloin + couscous + carrots",style:"harissa-yogurt"},
+  {n:13,name:"Beef tacos + corn tortillas + slaw",style:"chipotle crema"},
+  {n:14,name:"Halloumi + couscous + Mediterranean salad",style:"tzatziki"},
+  {n:15,name:"Pork & broccoli stir-fry + soba",style:"peanut-lime"},
+  {n:16,name:"Beef & barley soup + kale",style:"comfort, batch"},
+  {n:17,name:"Lemon-ricotta pasta + asparagus + peas",style:"Italian"},
+  {n:18,name:"Mushroom + spinach pasta + parmesan",style:"Italian"},
+  {n:19,name:"Tofu banh mi bowl + pickled veg",style:"sriracha mayo"},
+  {n:20,name:"Couscous salad + chicken + chickpeas + feta",style:"lemon-tahini"},
+  {n:21,name:"Pork yakisoba + cabbage + bean sprouts (sweet-savory sauce, Kewpie, pickled ginger)",style:"Japanese · ~25 min · TONIGHT"},
+];
+const ITEMS = [
+  {id:"l-yaki-noodle",store:"longos",section:"Tonight: Yakisoba bowl (#21)",name:"Yakisoba noodles, fresh (2–3 pack) — Asian aisle",price:5,bowls:[21]},
+  {id:"l-pork-belly",store:"longos",section:"Tonight: Yakisoba bowl (#21)",name:"Pork belly, sliced thin, ~1 lb (or sub chicken thigh)",price:14,bowls:[21]},
+  {id:"l-yaki-sauce",store:"longos",section:"Tonight: Yakisoba bowl (#21)",name:"Otafuku yakisoba sauce (bottle) — Asian aisle",price:7,bowls:[21]},
+  {id:"l-bean-sprout",store:"longos",section:"Tonight: Yakisoba bowl (#21)",name:"Bean sprouts, 1 bag",price:3,bowls:[21]},
+  {id:"l-kewpie",store:"longos",section:"Tonight: Yakisoba bowl (#21)",name:"Kewpie mayo (squeeze bottle) — Asian aisle",price:7,bowls:[21,"STAPLE"]},
+  {id:"l-beni",store:"longos",section:"Tonight: Yakisoba bowl (#21)",name:"Pickled red ginger / beni shoga (optional but great)",price:5,bowls:[21]},
+  {id:"l-chk-thigh",store:"longos",section:"Proteins (pick 4 weekly)",name:"Chicken thighs, boneless skinless, 2 lb",price:16,bowls:[1,4,6,9,10,20]},
+  {id:"l-beef-grnd",store:"longos",section:"Proteins (pick 4 weekly)",name:"Ground beef, medium, 1 lb",price:9,bowls:[13,16]},
+  {id:"l-pork-tnd",store:"longos",section:"Proteins (pick 4 weekly)",name:"Pork tenderloin, 1 lb",price:11,bowls:[12,15]},
+  {id:"l-salmon",store:"longos",section:"Proteins (pick 4 weekly)",name:"Wild salmon fillets, 1 lb",price:32,bowls:[2,7]},
+  {id:"l-shrimp",store:"longos",section:"Proteins (pick 4 weekly)",name:"Shrimp, frozen 340g bag",price:14,bowls:[5]},
+  {id:"l-tofu",store:"longos",section:"Proteins (pick 4 weekly)",name:"Extra-firm tofu, 2 blocks",price:8,bowls:[3,8,19]},
+  {id:"l-broc",store:"longos",section:"Vegetables",name:"Broccoli, 2 crowns",price:5,bowls:[1,15]},
+  {id:"l-asp",store:"longos",section:"Vegetables",name:"Asparagus, 1 bunch (in season)",price:5,bowls:[2,17]},
+  {id:"l-pep",store:"longos",section:"Vegetables",name:"Bell peppers, 4 mixed",price:8,bowls:[9,11,13,21]},
+  {id:"l-cuc",store:"longos",section:"Vegetables",name:"English cucumbers, 2",price:4,bowls:[4,8,14,20]},
+  {id:"l-tom",store:"longos",section:"Vegetables",name:"Cherry tomatoes, 2 pints",price:8,bowls:[5,10,14]},
+  {id:"l-kale",store:"longos",section:"Vegetables",name:"Kale or spinach, large bunch",price:5,bowls:[10,16,18]},
+  {id:"l-sw-pot",store:"longos",section:"Vegetables",name:"Sweet potato, 3 large",price:6,bowls:["STAPLE"]},
+  {id:"l-zuc",store:"longos",section:"Vegetables",name:"Zucchini, 2",price:4,bowls:["STAPLE"]},
+  {id:"l-cauli",store:"longos",section:"Vegetables",name:"Cauliflower, 1 head",price:5,bowls:[6]},
+  {id:"l-onion",store:"longos",section:"Vegetables",name:"Red onion, 2",price:2,bowls:["STAPLE"]},
+  {id:"l-carr",store:"longos",section:"Vegetables",name:"Carrots, 2 lb bag",price:3,bowls:[12,16,19,21]},
+  {id:"l-bokchoy",store:"longos",section:"Vegetables",name:"Bok choy, 2 heads",price:5,bowls:[3,11]},
+  {id:"l-mush",store:"longos",section:"Vegetables",name:"Cremini mushrooms, 1 pack",price:5,bowls:[18]},
+  {id:"l-cabb",store:"longos",section:"Vegetables",name:"Green cabbage, 1 small (slaw + yakisoba)",price:3,bowls:[13,21]},
+  {id:"l-special",store:"longos",section:"Vegetables",name:"Specialty veg pick",price:5,bowls:[17]},
+  {id:"l-app",store:"longos",section:"Fruits",name:"Apples, 5–6 mixed",price:7,bowls:["STAPLE"]},
+  {id:"l-ban",store:"longos",section:"Fruits",name:"Bananas, 8",price:4,bowls:["STAPLE"]},
+  {id:"l-berry",store:"longos",section:"Fruits",name:"Berries (in season), 2 containers",price:10,bowls:["STAPLE"]},
+  {id:"l-avo",store:"longos",section:"Fruits",name:"Avocados, 4",price:6,bowls:[8,9,13,19]},
+  {id:"l-lemon",store:"longos",section:"Fruits",name:"Lemons, 4",price:3,bowls:[2,5,17,20]},
+  {id:"l-lime",store:"longos",section:"Fruits",name:"Limes, 4",price:3,bowls:[13,15,19]},
+  {id:"l-cil",store:"longos",section:"Fresh herbs",name:"Cilantro, 1 bunch",price:2,bowls:[6,9,13,15,19]},
+  {id:"l-pars",store:"longos",section:"Fresh herbs",name:"Parsley, 1 bunch",price:2,bowls:[5,10,14,20]},
+  {id:"l-dill",store:"longos",section:"Fresh herbs",name:"Dill, 1 bunch",price:2,bowls:[4,14]},
+  {id:"l-scal",store:"longos",section:"Fresh herbs",name:"Green onions, 1 bunch",price:2,bowls:[1,3,7,8,11,21]},
+  {id:"l-basil",store:"longos",section:"Fresh herbs",name:"Fresh basil",price:2,bowls:[5,17,18]},
+  {id:"l-yog",store:"longos",section:"Dairy & cold case",name:"Greek yogurt, 1 kg tub",price:9,bowls:[12,"STAPLE"]},
+  {id:"l-feta",store:"longos",section:"Dairy & cold case",name:"Block feta",price:10,bowls:[10,14,20]},
+  {id:"l-hall",store:"longos",section:"Dairy & cold case",name:"Halloumi (rotate w/ feta)",price:10,bowls:[14]},
+  {id:"l-parm",store:"longos",section:"Dairy & cold case",name:"Parmesan wedge",price:10,bowls:[5,17,18]},
+  {id:"l-ricot",store:"longos",section:"Dairy & cold case",name:"Ricotta",price:5,bowls:[17]},
+  {id:"l-mozz",store:"longos",section:"Dairy & cold case",name:"Mozzarella block (rotate)",price:8,bowls:[]},
+  {id:"l-egg-w",store:"longos",section:"Dairy & cold case",name:"Eggs, dozen",price:7,bowls:["STAPLE"]},
+  {id:"l-sour",store:"longos",section:"Bread & bakery",name:"Sourdough loaf",price:7,bowls:["STAPLE"]},
+  {id:"l-pita",store:"longos",section:"Bread & bakery",name:"Pita or naan, pack",price:5,bowls:[4,10,14,20]},
+  {id:"l-tort",store:"longos",section:"Bread & bakery",name:"Corn tortillas (taco nights)",price:4,bowls:[13]},
+  {id:"l-hum",store:"longos",section:"Pre-made (time-savers)",name:"Hummus, large container",price:7,bowls:[4,10,20,"STAPLE"]},
+  {id:"l-tza",store:"longos",section:"Pre-made (time-savers)",name:"Tzatziki",price:5,bowls:[4,14]},
+  {id:"l-sal",store:"longos",section:"Pre-made (time-savers)",name:"Pre-washed salad greens, big box",price:8,bowls:[10,20,"STAPLE"]},
+  {id:"l-kid-cheese",store:"longos",section:"Kid snacks & lunches",name:"Cheese strings",price:6,bowls:[]},
+  {id:"l-kid-bars",store:"longos",section:"Kid snacks & lunches",name:"Granola bars",price:5,bowls:[]},
+  {id:"l-kid-fruitcup",store:"longos",section:"Kid snacks & lunches",name:"Fruit cups + applesauce",price:6,bowls:[]},
+  {id:"l-kid-juice",store:"longos",section:"Kid snacks & lunches",name:"Juice boxes",price:4,bowls:[]},
+  {id:"l-kid-crack",store:"longos",section:"Kid snacks & lunches",name:"Pretzels / Goldfish",price:4,bowls:[]},
+  {id:"c-oil",store:"costco",section:"Pantry staples",name:"Olive oil, Kirkland 1.5L",price:25,bowls:["STAPLE"]},
+  {id:"c-yog-big",store:"costco",section:"Pantry staples",name:"Greek yogurt, 2 kg tub",price:16,bowls:[12,"STAPLE"]},
+  {id:"c-eggs",store:"costco",section:"Pantry staples",name:"Eggs, 24-pack",price:12,bowls:["STAPLE"]},
+  {id:"c-pb",store:"costco",section:"Pantry staples",name:"Peanut butter, large jar",price:10,bowls:[3,15]},
+  {id:"c-coffee",store:"costco",section:"Pantry staples",name:"Coffee beans, 1 kg",price:18,bowls:["STAPLE"]},
+  {id:"c-nuts",store:"costco",section:"Pantry staples",name:"Mixed nuts, 1 kg",price:20,bowls:["STAPLE"]},
+  {id:"c-fr-blue",store:"costco",section:"Frozen",name:"Frozen wild blueberries, 1.5 kg",price:15,bowls:["STAPLE"]},
+  {id:"c-fr-mango",store:"costco",section:"Frozen",name:"Frozen mango, 1.5 kg",price:12,bowls:["STAPLE"]},
+  {id:"c-fr-veg",store:"costco",section:"Frozen",name:"Frozen broccoli + cauliflower (organic)",price:16,bowls:["STAPLE"]},
+  {id:"c-fr-edm",store:"costco",section:"Frozen",name:"Frozen edamame",price:8,bowls:[7]},
+  {id:"c-fr-sal",store:"costco",section:"Frozen",name:"Atlantic salmon, 6-pack frozen",price:42,bowls:[2,7]},
+  {id:"c-chk-org",store:"costco",section:"Proteins",name:"Organic chicken breast, 2 kg pack",price:38,bowls:[1,4,6,9,10,20]},
+  {id:"c-chk-grnd",store:"costco",section:"Proteins",name:"Ground chicken or turkey, 2 lb",price:14,bowls:[]},
+  {id:"c-cheese-sl",store:"costco",section:"Dairy",name:"Sliced cheese (cheddar/havarti) for kids",price:12,bowls:[]},
+  {id:"c-berry-bk",store:"costco",section:"Produce",name:"Berry mixed pack (when fresh price is bad)",price:15,bowls:["STAPLE"]},
+  {id:"b-quin",store:"bulkbarn",section:"Grains (bowl bases)",name:"Quinoa, 1 kg",price:12,bowls:[2]},
+  {id:"b-cous",store:"bulkbarn",section:"Grains (bowl bases)",name:"Israeli/pearl couscous, 500g",price:5,bowls:[4,12,14,20]},
+  {id:"b-farro",store:"bulkbarn",section:"Grains (bowl bases)",name:"Farro, 500g",price:5,bowls:[5,10]},
+  {id:"b-bulg",store:"bulkbarn",section:"Grains (bowl bases)",name:"Bulgur, 500g",price:4,bowls:[]},
+  {id:"b-brown",store:"bulkbarn",section:"Grains (bowl bases)",name:"Brown rice, 1 kg",price:4,bowls:[3]},
+  {id:"b-jasm",store:"bulkbarn",section:"Grains (bowl bases)",name:"Jasmine rice, 1 kg",price:4,bowls:[1,6,8,9,11,19]},
+  {id:"b-barley",store:"bulkbarn",section:"Grains (bowl bases)",name:"Pearl barley, 500g",price:3,bowls:[16]},
+  {id:"b-orec",store:"bulkbarn",section:"Pasta & noodles",name:"Orecchiette or rigatoni, 1 kg",price:5,bowls:[17]},
+  {id:"b-penne",store:"bulkbarn",section:"Pasta & noodles",name:"Whole-wheat penne",price:4,bowls:[18]},
+  {id:"b-soba",store:"bulkbarn",section:"Pasta & noodles",name:"Soba noodles",price:5,bowls:[7,15]},
+  {id:"b-rn",store:"bulkbarn",section:"Pasta & noodles",name:"Rice noodles (stir-fry)",price:4,bowls:[]},
+  {id:"b-orzo",store:"bulkbarn",section:"Pasta & noodles",name:"Orzo",price:3,bowls:[]},
+  {id:"b-lent",store:"bulkbarn",section:"Beans & legumes",name:"Dried lentils (red + green)",price:5,bowls:["STAPLE"]},
+  {id:"b-chk",store:"bulkbarn",section:"Beans & legumes",name:"Dried chickpeas, 500g",price:3,bowls:[20]},
+  {id:"b-blkbn",store:"bulkbarn",section:"Beans & legumes",name:"Dried black beans, 500g",price:3,bowls:[9]},
+  {id:"b-pine",store:"bulkbarn",section:"Nuts & seeds",name:"Pine nuts, 250g (pesto)",price:12,bowls:[18]},
+  {id:"b-alm",store:"bulkbarn",section:"Nuts & seeds",name:"Almonds",price:8,bowls:["STAPLE"]},
+  {id:"b-sesame",store:"bulkbarn",section:"Nuts & seeds",name:"Sesame seeds",price:4,bowls:[3,7,8]},
+  {id:"b-pump",store:"bulkbarn",section:"Nuts & seeds",name:"Pumpkin seeds",price:5,bowls:["STAPLE"]},
+  {id:"b-spice",store:"bulkbarn",section:"Spices",name:"Spice restock pick",price:10,bowls:["STAPLE"]},
+  {id:"h-tah",store:"healthyplanet",section:"Sauces & condiments",name:"Tahini (Kevala/Soom), 500g",price:14,bowls:[2,20]},
+  {id:"h-har",store:"healthyplanet",section:"Sauces & condiments",name:"Harissa paste",price:9,bowls:[12]},
+  {id:"h-miso",store:"healthyplanet",section:"Sauces & condiments",name:"White miso paste, large",price:14,bowls:[7]},
+  {id:"h-goch",store:"healthyplanet",section:"Sauces & condiments",name:"Gochujang",price:9,bowls:[]},
+  {id:"h-fish",store:"healthyplanet",section:"Sauces & condiments",name:"Fish sauce",price:8,bowls:[15,19]},
+  {id:"h-soy",store:"healthyplanet",section:"Sauces & condiments",name:"Low-sodium soy sauce",price:7,bowls:[1,3,7,8,11]},
+  {id:"h-rv",store:"healthyplanet",section:"Sauces & condiments",name:"Rice vinegar",price:6,bowls:[7,8,19]},
+  {id:"h-toas",store:"healthyplanet",section:"Sauces & condiments",name:"Toasted sesame oil",price:9,bowls:[1,3,7,8,11,15]},
+  {id:"h-coc",store:"healthyplanet",section:"Pantry",name:"Coconut milk, 4-pack",price:14,bowls:[6]},
+  {id:"h-tom",store:"healthyplanet",section:"Pantry",name:"San Marzano canned tomatoes, 4 cans",price:14,bowls:[16,18]},
+  {id:"s-local",store:"local",section:"Seasonal pick",name:"In-season local fruit/veg",price:30,bowls:["STAPLE"]},
+];
+const STORES = [
+  {id:"all",label:"All",freq:""},
+  {id:"longos",label:"Longo's / Farm Boy",freq:"Weekly"},
+  {id:"costco",label:"Costco",freq:"Bi-weekly"},
+  {id:"bulkbarn",label:"Bulk Barn",freq:"Monthly"},
+  {id:"healthyplanet",label:"Healthy Planet",freq:"Bi-monthly"},
+  {id:"local",label:"Local",freq:"Seasonal"},
+];
+const LS_CHECKED="bowl-list-checked-v1",LS_STORE="bowl-list-store-v1",LS_BOWL="bowl-list-bowl-v1";
+function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+let checked=load(LS_CHECKED,{}),activeStore=load(LS_STORE,"all"),activeBowl=load(LS_BOWL,null);
+const tabsEl=document.getElementById("tabs"),recipeGrid=document.getElementById("recipeGrid"),contentEl=document.getElementById("content");
+function renderTabs(){tabsEl.innerHTML="";STORES.forEach(s=>{const c=s.id==="all"?ITEMS.length:ITEMS.filter(i=>i.store===s.id).length;const b=document.createElement("button");b.className="tab"+(s.id===activeStore?" active":"");b.innerHTML=`${s.label}<span class="count">${c}</span>`;b.onclick=()=>{activeStore=s.id;save(LS_STORE,activeStore);renderTabs();renderContent()};tabsEl.appendChild(b)})}
+function renderRecipes(){recipeGrid.innerHTML="";BOWLS.forEach(b=>{const d=document.createElement("div");d.className="recipe"+(activeBowl===b.n?" active":"");d.innerHTML=`<span class="recipe-num">${b.n}.</span><span class="recipe-name">${b.name}</span><span class="recipe-meta">${b.style}</span>`;d.onclick=()=>{activeBowl=activeBowl===b.n?null:b.n;save(LS_BOWL,activeBowl);renderRecipes();renderContent()};recipeGrid.appendChild(d)})}
+function itemMatchesBowl(i,b){if(b==null)return true;if(!i.bowls||!i.bowls.length)return false;if(i.bowls.includes("STAPLE"))return true;return i.bowls.includes(b)}
+function renderContent(){contentEl.innerHTML="";const stores=activeStore==="all"?STORES.filter(s=>s.id!=="all").map(s=>s.id):[activeStore];let visAny=false;stores.forEach(sid=>{const sm=STORES.find(s=>s.id===sid);const si=ITEMS.filter(i=>i.store===sid);if(!si.length)return;const sec={};si.forEach(i=>{if(!sec[i.section])sec[i.section]=[];sec[i.section].push(i)});const wd=document.createElement("div");wd.className="section";const tt=si.reduce((a,b)=>a+b.price,0);wd.innerHTML=`<h2>${sm.label}<span class="freq">${sm.freq} · ~$${tt} target</span></h2>`;const list=document.createElement("div");list.className="list";Object.keys(sec).forEach(sn=>{const ss=document.createElement("div");ss.className="subsec";ss.textContent=sn;list.appendChild(ss);sec[sn].forEach(item=>{const m=itemMatchesBowl(item,activeBowl);if(m)visAny=true;const row=document.createElement("label");row.className="item"+(activeBowl!=null&&!m?" dim":"");const ic=!!checked[item.id];const th=(item.bowls||[]).map(b=>{if(b==="STAPLE")return`<span class="tag staple">STAPLE</span>`;const im=activeBowl===b;return`<span class="tag${im?" match":""}">#${b}</span>`}).join("");row.innerHTML=`<input type="checkbox" ${ic?"checked":""}><div class="item-body"><div class="item-row"><span class="item-name">${item.name}</span><span class="item-price">$${item.price}</span></div>${th?`<div class="tags">${th}</div>`:""}</div>`;const cb=row.querySelector("input");cb.addEventListener("change",()=>{if(cb.checked)checked[item.id]=true;else delete checked[item.id];save(LS_CHECKED,checked);row.querySelector(".item-name").style.textDecoration=cb.checked?"line-through":"";updateTotals()});list.appendChild(row)})});wd.appendChild(list);contentEl.appendChild(wd)});if(activeBowl!=null&&!visAny){const e=document.createElement("div");e.className="empty";e.textContent="No items for this bowl in this store. Try the All tab.";contentEl.appendChild(e)}updateTotals()}
+function updateTotals(){const v=activeStore==="all"?ITEMS:ITEMS.filter(i=>i.store===activeStore);const t=v.reduce((a,b)=>a+b.price,0);const r=v.filter(i=>!checked[i.id]).reduce((a,b)=>a+b.price,0);const cc=v.filter(i=>checked[i.id]).length;document.getElementById("costLeft").textContent="$"+r;document.getElementById("costTotal").textContent="$"+t;document.getElementById("ptext").textContent=`${cc} of ${v.length} picked`;const p=v.length?(cc/v.length*100):0;document.getElementById("bar").style.width=p+"%"}
+document.getElementById("resetBtn").addEventListener("click",()=>{if(!confirm("Uncheck all items?"))return;checked={};save(LS_CHECKED,checked);renderContent()});
+renderTabs();renderRecipes();renderContent();
+</script>
+</body>
+</html>
