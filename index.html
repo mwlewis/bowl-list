@@ -194,25 +194,19 @@ const ITEMS = [
   {id:"l-yaki-wpep",store:"longos",section:"Tonight: Crispy Tofu Yakisoba (#21)",name:"White pepper (if not in pantry) — spice aisle",price:5,bowls:[21]},
   {id:"l-yaki-salt",store:"longos",section:"Tonight: Crispy Tofu Yakisoba (#21)",name:"Kosher or sea salt (if not in pantry)",price:4,bowls:[21,"STAPLE"]},
   {id:"l-yaki-cuc",store:"longos",section:"Tonight: Crispy Tofu Yakisoba (#21)",name:"Cucumber, 1 (for quick smashed cucumber side — optional)",price:2,bowls:[21]},
-  {id:"l-week-chk-bone",store:"longos",section:"This Week (Mon–Fri plan)",name:"Chicken thighs, BONE-IN skin-on, 2 lb (Mon + Wed)",price:14,bowls:[1,9]},
-  {id:"l-week-pork",store:"longos",section:"This Week (Mon–Fri plan)",name:"Pork tenderloin, ~1.25 lb (Tue)",price:13,bowls:[12]},
   {id:"l-week-beef-stir",store:"longos",section:"This Week (Mon–Fri plan)",name:"Flank or sirloin, thin-sliced for stir-fry, 1 lb (Thu)",price:16,bowls:[11]},
   {id:"l-week-rotis",store:"longos",section:"This Week (Mon–Fri plan)",name:"Rotisserie chicken (Fri — skip the cook)",price:14,bowls:[10]},
   {id:"l-week-yel-onion",store:"longos",section:"This Week (Mon–Fri plan)",name:"Yellow onions, 2 (fajita + stir-fry)",price:2,bowls:[9,11]},
   {id:"l-week-snap",store:"longos",section:"This Week (Mon–Fri plan)",name:"Snap peas, 1 bag (Thu stir-fry)",price:4,bowls:[11]},
-  {id:"l-week-spinach",store:"longos",section:"This Week (Mon–Fri plan)",name:"Baby spinach, 1 bag (Fri Mediterranean)",price:5,bowls:[10]},
   {id:"l-week-blkbn",store:"longos",section:"This Week (Mon–Fri plan)",name:"Black beans, canned 2× (Wed — faster than dried)",price:4,bowls:[9]},
   {id:"l-week-corn",store:"longos",section:"This Week (Mon–Fri plan)",name:"Frozen corn (Wed corn salsa)",price:4,bowls:[9]},
   {id:"l-week-mex",store:"longos",section:"This Week (Mon–Fri plan)",name:"Shredded Mexican cheese (Wed fajita)",price:6,bowls:[9]},
   {id:"l-week-sourcream",store:"longos",section:"This Week (Mon–Fri plan)",name:"Sour cream, small tub (Wed topping)",price:4,bowls:[9]},
   {id:"l-week-dijon",store:"longos",section:"This Week (Mon–Fri plan)",name:"Dijon mustard (Tue — swap for harissa, kid-friendly)",price:5,bowls:[12,"STAPLE"]},
   {id:"l-week-olives",store:"longos",section:"This Week (Mon–Fri plan)",name:"Kalamata olives, jar (Fri Mediterranean)",price:7,bowls:[10]},
-  {id:"l-week-jasmine",store:"longos",section:"This Week (Mon–Fri plan)",name:"Jasmine rice (if not in pantry) — Mon + Wed + Thu",price:8,bowls:[1,9,11]},
-  {id:"l-week-farro",store:"longos",section:"This Week (Mon–Fri plan)",name:"Pearled farro (if not in pantry) — Fri",price:7,bowls:[10]},
-  {id:"l-week-cous",store:"longos",section:"This Week (Mon–Fri plan)",name:"Couscous (if not in pantry) — Tue",price:5,bowls:[12]},
-  {id:"l-chk-thigh",store:"longos",section:"Proteins (pick 4 weekly)",name:"Chicken thighs, boneless skinless, 2 lb",price:16,bowls:[1,4,6,9,10,20]},
+  {id:"l-chk-thigh",store:"longos",section:"Proteins (pick 4 weekly)",name:"Chicken thighs, bone-in skin-on, 2 lb (or boneless if preferred)",price:14,bowls:[1,4,6,9,10,20]},
   {id:"l-beef-grnd",store:"longos",section:"Proteins (pick 4 weekly)",name:"Ground beef, medium, 1 lb",price:9,bowls:[13,16]},
-  {id:"l-pork-tnd",store:"longos",section:"Proteins (pick 4 weekly)",name:"Pork tenderloin, 1 lb",price:11,bowls:[12,15]},
+  {id:"l-pork-tnd",store:"longos",section:"Proteins (pick 4 weekly)",name:"Pork tenderloin, ~1.25 lb",price:13,bowls:[12,15]},
   {id:"l-salmon",store:"longos",section:"Proteins (pick 4 weekly)",name:"Wild salmon fillets, 1 lb",price:32,bowls:[2,7]},
   {id:"l-shrimp",store:"longos",section:"Proteins (pick 4 weekly)",name:"Shrimp, frozen 340g bag",price:14,bowls:[5]},
   {id:"l-tofu",store:"longos",section:"Proteins (pick 4 weekly)",name:"Extra-firm tofu, 2 blocks",price:8,bowls:[3,8,19]},
@@ -221,7 +215,7 @@ const ITEMS = [
   {id:"l-pep",store:"longos",section:"Vegetables",name:"Bell peppers, 4 mixed",price:8,bowls:[9,11,13,21]},
   {id:"l-cuc",store:"longos",section:"Vegetables",name:"English cucumbers, 2",price:4,bowls:[4,8,14,20]},
   {id:"l-tom",store:"longos",section:"Vegetables",name:"Cherry tomatoes, 2 pints",price:8,bowls:[5,10,14]},
-  {id:"l-kale",store:"longos",section:"Vegetables",name:"Kale or spinach, large bunch",price:5,bowls:[10,16,18]},
+  {id:"l-kale",store:"longos",section:"Vegetables",name:"Baby spinach OR kale, 1 large bag/bunch",price:5,bowls:[10,16,18]},
   {id:"l-sw-pot",store:"longos",section:"Vegetables",name:"Sweet potato, 3 large",price:6,bowls:["STAPLE"]},
   {id:"l-zuc",store:"longos",section:"Vegetables",name:"Zucchini, 2",price:4,bowls:["STAPLE"]},
   {id:"l-cauli",store:"longos",section:"Vegetables",name:"Cauliflower, 1 head",price:5,bowls:[6]},
@@ -329,7 +323,7 @@ const STORES = [
   {id:"healthyplanet",label:"Healthy Planet",freq:"Bi-monthly"},
   {id:"local",label:"Local",freq:"Seasonal"},
 ];
-const LS_CHECKED="bowl-list-checked-v1",LS_MARKED="bowl-list-marked-v1",LS_STORE="bowl-list-store-v1",LS_BOWL="bowl-list-bowl-v1";
+const LS_CHECKED="bowl-list-checked-v1",LS_MARKED="bowl-list-marked-v1",LS_STORE="bowl-list-store-v1",LS_BOWL="bowl-list-bowl-v1",LS_BOWLS="bowl-list-bowls-v2";
 function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 // marked[itemId] = "got" (bought this trip) | "have" (already in pantry, skip).
@@ -342,29 +336,74 @@ if(marked==null){
   for(const id in old)if(old[id])marked[id]="got";
   save(LS_MARKED,marked);
 }
-let activeStore=load(LS_STORE,"all"),activeBowl=load(LS_BOWL,null);
+let activeStore=load(LS_STORE,"all");
+// activeBowls = array of selected bowl numbers (empty = no filter).
+// Multi-select so you can plan a full shopping trip across several
+// bowls in one walk. One-shot migration from the old single-bowl key.
+let activeBowls=load(LS_BOWLS,null);
+if(activeBowls==null){
+  const old=load(LS_BOWL,null);
+  activeBowls=(old==null)?[]:[old];
+  save(LS_BOWLS,activeBowls);
+}
 const tabsEl=document.getElementById("tabs"),recipeGrid=document.getElementById("recipeGrid"),contentEl=document.getElementById("content"),weekGrid=document.getElementById("weekGrid");
 function renderTabs(){tabsEl.innerHTML="";STORES.forEach(s=>{const c=s.id==="all"?ITEMS.length:ITEMS.filter(i=>i.store===s.id).length;const b=document.createElement("button");b.className="tab"+(s.id===activeStore?" active":"");b.innerHTML=`${s.label}<span class="count">${c}</span>`;b.onclick=()=>{activeStore=s.id;save(LS_STORE,activeStore);renderTabs();renderContent()};tabsEl.appendChild(b)})}
-function renderRecipes(){recipeGrid.innerHTML="";BOWLS.forEach(b=>{const d=document.createElement("div");d.className="recipe"+(activeBowl===b.n?" active":"");d.innerHTML=`<span class="recipe-num">${b.n}.</span><span class="recipe-name">${b.name}</span><span class="recipe-meta">${b.style}</span>`;d.onclick=()=>{activeBowl=activeBowl===b.n?null:b.n;save(LS_BOWL,activeBowl);renderRecipes();renderWeek();renderContent()};recipeGrid.appendChild(d)})}
+function renderRecipes(){
+  recipeGrid.innerHTML="";
+  BOWLS.forEach(b=>{
+    const d=document.createElement("div");
+    d.className="recipe"+(activeBowls.includes(b.n)?" active":"");
+    d.innerHTML=`<span class="recipe-num">${b.n}.</span><span class="recipe-name">${b.name}</span><span class="recipe-meta">${b.style}</span>`;
+    d.onclick=()=>toggleBowl(b.n);
+    recipeGrid.appendChild(d);
+  });
+}
 function renderWeek(){
   weekGrid.innerHTML="";
   WEEK_PLAN.forEach(d=>{
     const bowl=BOWLS.find(b=>b.n===d.n);
     if(!bowl)return;
     const el=document.createElement("div");
-    el.className="day"+(activeBowl===d.n?" active":"");
+    el.className="day"+(activeBowls.includes(d.n)?" active":"");
     el.innerHTML=`<span class="day-tag">${d.day}</span><div class="day-body"><span class="day-meal">#${bowl.n} · ${bowl.name}</span><span class="day-note">${d.note}</span></div>`;
-    el.onclick=()=>{
-      activeBowl=activeBowl===d.n?null:d.n;
-      save(LS_BOWL,activeBowl);
-      renderRecipes();
-      renderWeek();
-      renderContent();
-    };
+    el.onclick=()=>toggleBowl(d.n);
     weekGrid.appendChild(el);
   });
+  // Inject "Select all 5" / "Clear" button row
+  const weekBowls=WEEK_PLAN.map(d=>d.n);
+  const allSelected=weekBowls.every(n=>activeBowls.includes(n));
+  const anySelected=activeBowls.length>0;
+  let buttonsRow=document.getElementById("weekButtons");
+  if(!buttonsRow){
+    buttonsRow=document.createElement("div");
+    buttonsRow.id="weekButtons";
+    buttonsRow.style.cssText="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;";
+    weekGrid.parentNode.appendChild(buttonsRow);
+  }
+  buttonsRow.innerHTML="";
+  const selAllBtn=document.createElement("button");
+  selAllBtn.className="btn";
+  selAllBtn.style.fontSize="12px";
+  selAllBtn.textContent=allSelected?"All 5 nights selected ✓":"Select all 5 nights";
+  selAllBtn.onclick=()=>{
+    if(allSelected){activeBowls=activeBowls.filter(n=>!weekBowls.includes(n))}
+    else{weekBowls.forEach(n=>{if(!activeBowls.includes(n))activeBowls.push(n)})}
+    save(LS_BOWLS,activeBowls);renderRecipes();renderWeek();renderContent();
+  };
+  buttonsRow.appendChild(selAllBtn);
+  if(anySelected){
+    const clearBtn=document.createElement("button");
+    clearBtn.className="btn";
+    clearBtn.style.fontSize="12px";
+    clearBtn.textContent=`Clear filter (${activeBowls.length})`;
+    clearBtn.onclick=()=>{activeBowls=[];save(LS_BOWLS,activeBowls);renderRecipes();renderWeek();renderContent()};
+    buttonsRow.appendChild(clearBtn);
+  }
 }
-function itemMatchesBowl(i,b){if(b==null)return true;if(!i.bowls||!i.bowls.length)return false;return i.bowls.includes(b)}
+// Pass the active-bowls array. Empty array → no filter, show everything.
+// Otherwise an item matches if it's tagged with ANY of the selected bowls.
+function itemMatchesBowls(i,bowlsArr){if(!bowlsArr||!bowlsArr.length)return true;if(!i.bowls||!i.bowls.length)return false;return i.bowls.some(b=>bowlsArr.includes(b))}
+function toggleBowl(n){const i=activeBowls.indexOf(n);if(i>=0)activeBowls.splice(i,1);else activeBowls.push(n);save(LS_BOWLS,activeBowls);renderRecipes();renderWeek();renderContent()}
 function renderContent(){
   contentEl.innerHTML="";
   const stores=activeStore==="all"?STORES.filter(s=>s.id!=="all").map(s=>s.id):[activeStore];
@@ -375,7 +414,7 @@ function renderContent(){
     if(!allInStore.length)return;
     // When a bowl filter is active, hide non-matching items entirely.
     // Empty sections disappear automatically.
-    const visibleInStore=activeBowl==null?allInStore:allInStore.filter(i=>itemMatchesBowl(i,activeBowl));
+    const visibleInStore=activeBowls.length===0?allInStore:allInStore.filter(i=>itemMatchesBowls(i,activeBowls));
     if(!visibleInStore.length)return;
     visAny=true;
     const sec={};
@@ -383,7 +422,8 @@ function renderContent(){
     const wd=document.createElement("div");
     wd.className="section";
     const tt=visibleInStore.reduce((a,b)=>a+b.price,0);
-    const freqLabel=activeBowl==null?`${sm.freq} · ~$${tt} target`:`Bowl #${activeBowl} · $${tt}`;
+    const bowlLabel=activeBowls.length>1?`${activeBowls.map(n=>`#${n}`).join("+")} · $${tt}`:`Bowl #${activeBowls[0]} · $${tt}`;
+    const freqLabel=activeBowls.length===0?`${sm.freq} · ~$${tt} target`:bowlLabel;
     wd.innerHTML=`<h2>${sm.label}<span class="freq">${freqLabel}</span></h2>`;
     const list=document.createElement("div");
     list.className="list";
@@ -400,7 +440,7 @@ function renderContent(){
         const isHave=state==="have";
         const tagPills=(item.bowls||[]).map(b=>{
           if(b==="STAPLE")return`<span class="tag staple">STAPLE</span>`;
-          const im=activeBowl===b;
+          const im=activeBowls.includes(b);
           return`<span class="tag${im?" match":""}">#${b}</span>`;
         }).join("");
         const haveLabel=isHave?"🏠 ✓ have":"🏠 have";
@@ -428,17 +468,17 @@ function renderContent(){
     wd.appendChild(list);
     contentEl.appendChild(wd);
   });
-  if(activeBowl!=null&&!visAny){
+  if(activeBowls.length>0&&!visAny){
     const e=document.createElement("div");
     e.className="empty";
-    e.textContent="No items tagged for this bowl in this store. Try the All tab, or untap the bowl to see everything.";
+    e.textContent="No items tagged for the selected bowls in this store. Try the All tab, or clear the filter.";
     contentEl.appendChild(e);
   }
   updateTotals();
 }
 function updateTotals(){
   const inStore=activeStore==="all"?ITEMS:ITEMS.filter(i=>i.store===activeStore);
-  const v=inStore.filter(i=>itemMatchesBowl(i,activeBowl));
+  const v=inStore.filter(i=>itemMatchesBowls(i,activeBowls));
   // Trip total = sum of items still TO BUY (need or got — not items already in pantry).
   // Excludes "have" items because you wouldn't be paying for those.
   const tripItems=v.filter(i=>marked[i.id]!=="have");
