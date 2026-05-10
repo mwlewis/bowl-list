@@ -97,6 +97,19 @@ footer { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border
 .empty { padding: 32px 16px; text-align: center; color: #8c8a80; font-size: 13px; }
 .budget-note { margin: 14px 16px 0; padding: 11px 13px; background: #fff8e1; border: 1px solid #f0d878; border-radius: 10px; font-size: 12.5px; color: #5a4d1a; line-height: 1.5; }
 .budget-note strong { color: #2a1f00; }
+.week-plan { margin: 14px 16px 0; padding: 12px 14px; background: #eaf2e7; border: 1px solid #b9d4ae; border-radius: 10px; }
+.week-plan h2 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #2d5028; margin: 0 0 10px; }
+.week-plan h2 .sub { font-weight: 500; text-transform: none; letter-spacing: 0; color: #4a6e44; margin-left: 6px; font-size: 11px; }
+.week-grid { display: grid; grid-template-columns: 1fr; gap: 6px; }
+@media (min-width: 480px) { .week-grid { grid-template-columns: 1fr 1fr; } }
+.day { display: flex; align-items: flex-start; gap: 10px; padding: 9px 11px; background: #fff; border: 1px solid #d5e5cd; border-radius: 8px; cursor: pointer; transition: all .12s; }
+.day:hover { border-color: #98ba8c; }
+.day.active { background: #fff5d6; border-color: #d4b343; }
+.day-tag { font-weight: 700; font-size: 11px; color: #4a6e44; background: #d5e5cd; padding: 2px 7px; border-radius: 999px; flex-shrink: 0; min-width: 34px; text-align: center; }
+.day.active .day-tag { background: #d4b343; color: #2a1f00; }
+.day-body { flex: 1; min-width: 0; font-size: 13px; line-height: 1.35; }
+.day-meal { font-weight: 600; color: #1a1a1a; }
+.day-note { display: block; font-size: 11.5px; color: #6b6960; margin-top: 2px; }
 </style>
 </head>
 <body>
@@ -114,6 +127,10 @@ footer { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border
   <summary><span>21 bowls — tap to highlight items</span></summary>
   <div class="recipes-grid" id="recipeGrid"></div>
 </details>
+<div class="week-plan">
+  <h2>This Week's Plan <span class="sub">tap a night to filter</span></h2>
+  <div class="week-grid" id="weekGrid"></div>
+</div>
 <div class="budget-note">
   <strong>How this works.</strong> Tap a bowl to filter the list to just what that bowl needs.
   Tap a store tab to limit by where you'll shop. Each item has two ways to mark it done:
@@ -157,7 +174,7 @@ const BOWLS = [
   {n:18,name:"Mushroom + spinach pasta + parmesan",style:"Italian"},
   {n:19,name:"Tofu banh mi bowl + pickled veg",style:"sriracha mayo"},
   {n:20,name:"Couscous salad + chicken + chickpeas + feta",style:"lemon-tahini"},
-  {n:21,name:"Crispy tofu yakisoba + cabbage + bean sprouts (Kewpie, pickled ginger) — serves 3",style:"Japanese · ~30 min · TONIGHT"},
+  {n:21,name:"Crispy tofu yakisoba + cabbage + bean sprouts (Kewpie, pickled ginger) — serves 3",style:"Japanese · ~30 min"},
 ];
 const ITEMS = [
   {id:"l-yaki-noodle",store:"longos",section:"Tonight: Crispy Tofu Yakisoba (#21)",name:"Yakisoba noodles, fresh (1 pack — serves 3) — Asian aisle",price:5,bowls:[21]},
@@ -177,6 +194,22 @@ const ITEMS = [
   {id:"l-yaki-wpep",store:"longos",section:"Tonight: Crispy Tofu Yakisoba (#21)",name:"White pepper (if not in pantry) — spice aisle",price:5,bowls:[21]},
   {id:"l-yaki-salt",store:"longos",section:"Tonight: Crispy Tofu Yakisoba (#21)",name:"Kosher or sea salt (if not in pantry)",price:4,bowls:[21,"STAPLE"]},
   {id:"l-yaki-cuc",store:"longos",section:"Tonight: Crispy Tofu Yakisoba (#21)",name:"Cucumber, 1 (for quick smashed cucumber side — optional)",price:2,bowls:[21]},
+  {id:"l-week-chk-bone",store:"longos",section:"This Week (Mon–Fri plan)",name:"Chicken thighs, BONE-IN skin-on, 2 lb (Mon + Wed)",price:14,bowls:[1,9]},
+  {id:"l-week-pork",store:"longos",section:"This Week (Mon–Fri plan)",name:"Pork tenderloin, ~1.25 lb (Tue)",price:13,bowls:[12]},
+  {id:"l-week-beef-stir",store:"longos",section:"This Week (Mon–Fri plan)",name:"Flank or sirloin, thin-sliced for stir-fry, 1 lb (Thu)",price:16,bowls:[11]},
+  {id:"l-week-rotis",store:"longos",section:"This Week (Mon–Fri plan)",name:"Rotisserie chicken (Fri — skip the cook)",price:14,bowls:[10]},
+  {id:"l-week-yel-onion",store:"longos",section:"This Week (Mon–Fri plan)",name:"Yellow onions, 2 (fajita + stir-fry)",price:2,bowls:[9,11]},
+  {id:"l-week-snap",store:"longos",section:"This Week (Mon–Fri plan)",name:"Snap peas, 1 bag (Thu stir-fry)",price:4,bowls:[11]},
+  {id:"l-week-spinach",store:"longos",section:"This Week (Mon–Fri plan)",name:"Baby spinach, 1 bag (Fri Mediterranean)",price:5,bowls:[10]},
+  {id:"l-week-blkbn",store:"longos",section:"This Week (Mon–Fri plan)",name:"Black beans, canned 2× (Wed — faster than dried)",price:4,bowls:[9]},
+  {id:"l-week-corn",store:"longos",section:"This Week (Mon–Fri plan)",name:"Frozen corn (Wed corn salsa)",price:4,bowls:[9]},
+  {id:"l-week-mex",store:"longos",section:"This Week (Mon–Fri plan)",name:"Shredded Mexican cheese (Wed fajita)",price:6,bowls:[9]},
+  {id:"l-week-sourcream",store:"longos",section:"This Week (Mon–Fri plan)",name:"Sour cream, small tub (Wed topping)",price:4,bowls:[9]},
+  {id:"l-week-dijon",store:"longos",section:"This Week (Mon–Fri plan)",name:"Dijon mustard (Tue — swap for harissa, kid-friendly)",price:5,bowls:[12,"STAPLE"]},
+  {id:"l-week-olives",store:"longos",section:"This Week (Mon–Fri plan)",name:"Kalamata olives, jar (Fri Mediterranean)",price:7,bowls:[10]},
+  {id:"l-week-jasmine",store:"longos",section:"This Week (Mon–Fri plan)",name:"Jasmine rice (if not in pantry) — Mon + Wed + Thu",price:8,bowls:[1,9,11]},
+  {id:"l-week-farro",store:"longos",section:"This Week (Mon–Fri plan)",name:"Pearled farro (if not in pantry) — Fri",price:7,bowls:[10]},
+  {id:"l-week-cous",store:"longos",section:"This Week (Mon–Fri plan)",name:"Couscous (if not in pantry) — Tue",price:5,bowls:[12]},
   {id:"l-chk-thigh",store:"longos",section:"Proteins (pick 4 weekly)",name:"Chicken thighs, boneless skinless, 2 lb",price:16,bowls:[1,4,6,9,10,20]},
   {id:"l-beef-grnd",store:"longos",section:"Proteins (pick 4 weekly)",name:"Ground beef, medium, 1 lb",price:9,bowls:[13,16]},
   {id:"l-pork-tnd",store:"longos",section:"Proteins (pick 4 weekly)",name:"Pork tenderloin, 1 lb",price:11,bowls:[12,15]},
@@ -278,6 +311,16 @@ const ITEMS = [
   {id:"h-tom",store:"healthyplanet",section:"Pantry",name:"San Marzano canned tomatoes, 4 cans",price:14,bowls:[16,18]},
   {id:"s-local",store:"local",section:"Seasonal pick",name:"In-season local fruit/veg",price:30,bowls:["STAPLE"]},
 ];
+// Active week plan — kid-friendly, 25–40 min each. Bowl numbers map to
+// the existing BOWLS entries; "note" calls out any tweak vs the base
+// recipe (e.g. harissa → Dijon swap on Tue).
+const WEEK_PLAN = [
+  {day:"Mon",n:1,note:"Steam broccoli while rice cooks; sear thighs; glaze. 25 min."},
+  {day:"Tue",n:12,note:"Swap harissa for Dijon (kid-friendly). Tenderloin 20 min @425°F; couscous 5; carrots roast alongside."},
+  {day:"Wed",n:9,note:"Sheet-pan peppers + onions; sliced thighs; kids assemble. 30 min."},
+  {day:"Thu",n:11,note:"Bok choy + snap peas for veg volume. 25 min total."},
+  {day:"Fri",n:10,note:"Rotisserie chicken skips the cook. Warm farro, wilt spinach, top with feta + olives + lemon. 15 min."},
+];
 const STORES = [
   {id:"all",label:"All",freq:""},
   {id:"longos",label:"Longo's / Farm Boy",freq:"Weekly"},
@@ -300,9 +343,27 @@ if(marked==null){
   save(LS_MARKED,marked);
 }
 let activeStore=load(LS_STORE,"all"),activeBowl=load(LS_BOWL,null);
-const tabsEl=document.getElementById("tabs"),recipeGrid=document.getElementById("recipeGrid"),contentEl=document.getElementById("content");
+const tabsEl=document.getElementById("tabs"),recipeGrid=document.getElementById("recipeGrid"),contentEl=document.getElementById("content"),weekGrid=document.getElementById("weekGrid");
 function renderTabs(){tabsEl.innerHTML="";STORES.forEach(s=>{const c=s.id==="all"?ITEMS.length:ITEMS.filter(i=>i.store===s.id).length;const b=document.createElement("button");b.className="tab"+(s.id===activeStore?" active":"");b.innerHTML=`${s.label}<span class="count">${c}</span>`;b.onclick=()=>{activeStore=s.id;save(LS_STORE,activeStore);renderTabs();renderContent()};tabsEl.appendChild(b)})}
-function renderRecipes(){recipeGrid.innerHTML="";BOWLS.forEach(b=>{const d=document.createElement("div");d.className="recipe"+(activeBowl===b.n?" active":"");d.innerHTML=`<span class="recipe-num">${b.n}.</span><span class="recipe-name">${b.name}</span><span class="recipe-meta">${b.style}</span>`;d.onclick=()=>{activeBowl=activeBowl===b.n?null:b.n;save(LS_BOWL,activeBowl);renderRecipes();renderContent()};recipeGrid.appendChild(d)})}
+function renderRecipes(){recipeGrid.innerHTML="";BOWLS.forEach(b=>{const d=document.createElement("div");d.className="recipe"+(activeBowl===b.n?" active":"");d.innerHTML=`<span class="recipe-num">${b.n}.</span><span class="recipe-name">${b.name}</span><span class="recipe-meta">${b.style}</span>`;d.onclick=()=>{activeBowl=activeBowl===b.n?null:b.n;save(LS_BOWL,activeBowl);renderRecipes();renderWeek();renderContent()};recipeGrid.appendChild(d)})}
+function renderWeek(){
+  weekGrid.innerHTML="";
+  WEEK_PLAN.forEach(d=>{
+    const bowl=BOWLS.find(b=>b.n===d.n);
+    if(!bowl)return;
+    const el=document.createElement("div");
+    el.className="day"+(activeBowl===d.n?" active":"");
+    el.innerHTML=`<span class="day-tag">${d.day}</span><div class="day-body"><span class="day-meal">#${bowl.n} · ${bowl.name}</span><span class="day-note">${d.note}</span></div>`;
+    el.onclick=()=>{
+      activeBowl=activeBowl===d.n?null:d.n;
+      save(LS_BOWL,activeBowl);
+      renderRecipes();
+      renderWeek();
+      renderContent();
+    };
+    weekGrid.appendChild(el);
+  });
+}
 function itemMatchesBowl(i,b){if(b==null)return true;if(!i.bowls||!i.bowls.length)return false;return i.bowls.includes(b)}
 function renderContent(){
   contentEl.innerHTML="";
@@ -397,7 +458,7 @@ function updateTotals(){
   document.getElementById("bar").style.width=p+"%";
 }
 document.getElementById("resetBtn").addEventListener("click",()=>{if(!confirm("Reset all items? (clears both ‘got’ and ‘have’ marks)"))return;marked={};save(LS_MARKED,marked);renderContent()});
-renderTabs();renderRecipes();renderContent();
+renderTabs();renderRecipes();renderWeek();renderContent();
 </script>
 </body>
 </html>
