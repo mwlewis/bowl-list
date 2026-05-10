@@ -110,13 +110,20 @@ footer { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border
 .day-body { flex: 1; min-width: 0; font-size: 13px; line-height: 1.35; }
 .day-meal { font-weight: 600; color: #1a1a1a; }
 .day-note { display: block; font-size: 11.5px; color: #6b6960; margin-top: 2px; }
+.recipe-detail { margin: 14px 16px 0; padding: 14px 16px; background: #fff; border: 1px solid #d4b343; border-left: 4px solid #d4b343; border-radius: 10px; }
+.recipe-detail h3 { font-size: 14px; font-weight: 700; margin: 0 0 4px; color: #1a1a1a; }
+.recipe-detail .headline { font-size: 13px; color: #5a4d1a; margin: 0 0 4px; font-weight: 500; }
+.recipe-detail .serves { font-size: 11.5px; color: #8c8a80; margin: 0 0 12px; font-variant-numeric: tabular-nums; }
+.recipe-detail h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: #4a6e44; margin: 10px 0 6px; }
+.recipe-detail ol { margin: 0 0 4px 0; padding-left: 18px; font-size: 13px; line-height: 1.45; color: #2a2a26; }
+.recipe-detail ol li { margin-bottom: 4px; }
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
   <h1>Bowl Shopping List</h1>
-  <p class="sub">21 bowls · 4-store rotation · ~$1,512/mo target</p>
+  <p class="sub">22 bowls · 4-store rotation · ~$1,512/mo target</p>
   <div class="bar">
     <div class="progress"><span id="bar"></span></div>
     <div class="progress-text" id="ptext">0 of 0 picked</div>
@@ -124,13 +131,14 @@ footer { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border
   <div class="tabs" id="tabs"></div>
 </header>
 <details class="recipes" id="recipes">
-  <summary><span>21 bowls — tap to highlight items</span></summary>
+  <summary><span>22 bowls — tap to highlight items</span></summary>
   <div class="recipes-grid" id="recipeGrid"></div>
 </details>
 <div class="week-plan">
   <h2>This Week's Plan <span class="sub">tap a night to filter</span></h2>
   <div class="week-grid" id="weekGrid"></div>
 </div>
+<div id="recipeDetail" class="recipe-detail" style="display:none;"></div>
 <div class="budget-note">
   <strong>How this works.</strong> Tap a bowl to filter the list to just what that bowl needs.
   Tap a store tab to limit by where you'll shop. Each item has two ways to mark it done:
@@ -175,7 +183,55 @@ const BOWLS = [
   {n:19,name:"Tofu banh mi bowl + pickled veg",style:"sriracha mayo"},
   {n:20,name:"Couscous salad + chicken + chickpeas + feta",style:"lemon-tahini"},
   {n:21,name:"Crispy tofu yakisoba + cabbage + bean sprouts (Kewpie, pickled ginger) — serves 3",style:"Japanese · ~30 min"},
+  {n:22,name:"Beef tenderloin medallions + farro pilaf w/ roasted butternut squash + green beans almondine",style:"Restaurant-plated · 40 min · weekend project · maple-balsamic glaze (kid job)"},
 ];
+
+// Full mise-en-place recipes keyed by bowl number. Only populate bowls
+// that have detailed, kid-job-included recipes — most rotation bowls
+// just use the style field for a one-liner.
+const BOWL_RECIPES = {
+  22: {
+    headline: "Restaurant-plated dinner the kids help build",
+    serves: "Serves 3–4 · 40 min total",
+    sections: [
+      {
+        title: "Kids' jobs (real impact on the plate)",
+        steps: [
+          "Whisk the glaze: ¼ cup maple syrup + 3 tbsp balsamic + 1 tbsp Dijon + 1 minced garlic clove + leaves from 4 sprigs of thyme.",
+          "Reduce the glaze on medium-low (with you watching) for ~5 min until glossy and syrupy. Off heat, swirl in 1 tbsp cold butter.",
+          "Cube the butternut squash into ¾-inch pieces (after you halve and peel it).",
+          "Strip the rest of the thyme leaves (whatever is left from the glaze).",
+          "Toast ⅓ cup sliced almonds in a dry pan over medium heat, 3 min, until fragrant — for the green beans.",
+        ],
+      },
+      {
+        title: "Your jobs",
+        steps: [
+          "Roast butternut squash: 425°F, olive oil + salt + pepper + thyme, 25–30 min. Toss halfway. Goal: caramelised edges, fork-tender.",
+          "Farro pilaf: 1 cup pearled farro + 2½ cups stock, simmer 20 min until tender. Fold in roasted squash + a knob of butter + salt to taste.",
+          "Green beans almondine: blanch 1 lb green beans in salted boiling water 2 min, ice bath, drain. Sauté in 1 tbsp butter for 2 min, finish with the toasted almonds + a squeeze of lemon.",
+          "Beef medallions: pat dry, salt + pepper. Hot cast-iron pan, 1 tbsp neutral oil. Sear 3–4 min per side for medium-rare (internal ~130°F). Rest 5 min on a cutting board, then slice across the grain.",
+        ],
+      },
+      {
+        title: "Plate it",
+        steps: [
+          "Spoon farro pilaf into the centre of each bowl/plate.",
+          "Fan the sliced medallions over the farro.",
+          "Drape the warm maple-balsamic glaze over the beef (don't drown it — restaurant uses ~1 tbsp per portion).",
+          "Pile the green beans alongside, top with extra toasted almonds. Optional: a few flaky-salt crystals on the meat.",
+        ],
+      },
+      {
+        title: "Butcher tip",
+        steps: [
+          "At Longo's, ask the butcher for center-cut beef tenderloin medallions — three 5–6 oz pieces. ~$35–45 total depending on the day.",
+          "If they're out, NY strip or top sirloin medallions both work; adjust sear time to thickness.",
+        ],
+      },
+    ],
+  },
+};
 const ITEMS = [
   {id:"l-yaki-noodle",store:"longos",section:"Tonight: Crispy Tofu Yakisoba (#21)",name:"Yakisoba noodles, fresh (1 pack — serves 3) — Asian aisle",price:5,bowls:[21]},
   {id:"l-yaki-tofu",store:"longos",section:"Tonight: Crispy Tofu Yakisoba (#21)",name:"Extra-firm tofu, 1 block (14 oz) — TONIGHT'S protein",price:4,bowls:[21]},
@@ -202,8 +258,17 @@ const ITEMS = [
   {id:"l-week-corn",store:"longos",section:"This Week (Mon–Fri plan)",name:"Frozen corn (Wed corn salsa)",price:4,bowls:[9]},
   {id:"l-week-mex",store:"longos",section:"This Week (Mon–Fri plan)",name:"Shredded Mexican cheese (Wed fajita)",price:6,bowls:[9]},
   {id:"l-week-sourcream",store:"longos",section:"This Week (Mon–Fri plan)",name:"Sour cream, small tub (Wed topping)",price:4,bowls:[9]},
-  {id:"l-week-dijon",store:"longos",section:"This Week (Mon–Fri plan)",name:"Dijon mustard (Tue — swap for harissa, kid-friendly)",price:5,bowls:[12,"STAPLE"]},
+  {id:"l-week-dijon",store:"longos",section:"This Week (Mon–Fri plan)",name:"Dijon mustard (Tue — swap for harissa, kid-friendly)",price:5,bowls:[12,22,"STAPLE"]},
   {id:"l-week-olives",store:"longos",section:"This Week (Mon–Fri plan)",name:"Kalamata olives, jar (Fri Mediterranean)",price:7,bowls:[10]},
+  {id:"l-bowl22-tenderloin",store:"longos",section:"Bowl #22: Beef Tenderloin Medallions",name:"Beef tenderloin medallions, center-cut, 3× 5–6 oz (~1 lb) — ask the butcher",price:40,bowls:[22]},
+  {id:"l-bowl22-bsquash",store:"longos",section:"Bowl #22: Beef Tenderloin Medallions",name:"Butternut squash, 1 small (or pre-cubed pack)",price:6,bowls:[22]},
+  {id:"l-bowl22-greenbeans",store:"longos",section:"Bowl #22: Beef Tenderloin Medallions",name:"Green beans, fresh, 1 lb",price:5,bowls:[22]},
+  {id:"l-bowl22-thyme",store:"longos",section:"Bowl #22: Beef Tenderloin Medallions",name:"Fresh thyme, 1 small bunch",price:3,bowls:[22,"STAPLE"]},
+  {id:"l-bowl22-almonds",store:"longos",section:"Bowl #22: Beef Tenderloin Medallions",name:"Sliced almonds, small bag (for green beans almondine)",price:5,bowls:[22]},
+  {id:"l-bowl22-maple",store:"longos",section:"Bowl #22: Beef Tenderloin Medallions",name:"Pure maple syrup, small bottle (if not in pantry)",price:10,bowls:[22,"STAPLE"]},
+  {id:"l-bowl22-balsamic",store:"longos",section:"Bowl #22: Beef Tenderloin Medallions",name:"Balsamic vinegar (if not in pantry)",price:8,bowls:[22,"STAPLE"]},
+  {id:"l-bowl22-butter",store:"longos",section:"Bowl #22: Beef Tenderloin Medallions",name:"Unsalted butter, 1 lb (if not in pantry — glaze + green beans)",price:7,bowls:[22,"STAPLE"]},
+  {id:"l-bowl22-stock",store:"longos",section:"Bowl #22: Beef Tenderloin Medallions",name:"Chicken or vegetable stock, 1L (for farro — if not in pantry)",price:5,bowls:[22,"STAPLE"]},
   {id:"l-chk-thigh",store:"longos",section:"Proteins (pick 4 weekly)",name:"Chicken thighs, bone-in skin-on, 2 lb (or boneless if preferred)",price:14,bowls:[1,4,6,9,10,20]},
   {id:"l-beef-grnd",store:"longos",section:"Proteins (pick 4 weekly)",name:"Ground beef, medium, 1 lb",price:9,bowls:[13,16]},
   {id:"l-pork-tnd",store:"longos",section:"Proteins (pick 4 weekly)",name:"Pork tenderloin, ~1.25 lb",price:13,bowls:[12,15]},
@@ -275,7 +340,7 @@ const ITEMS = [
   {id:"c-berry-bk",store:"costco",section:"Produce",name:"Berry mixed pack (when fresh price is bad)",price:15,bowls:["STAPLE"]},
   {id:"b-quin",store:"bulkbarn",section:"Grains (bowl bases)",name:"Quinoa, 1 kg",price:12,bowls:[2]},
   {id:"b-cous",store:"bulkbarn",section:"Grains (bowl bases)",name:"Israeli/pearl couscous, 500g",price:5,bowls:[4,12,14,20]},
-  {id:"b-farro",store:"bulkbarn",section:"Grains (bowl bases)",name:"Farro, 500g",price:5,bowls:[5,10]},
+  {id:"b-farro",store:"bulkbarn",section:"Grains (bowl bases)",name:"Farro, 500g",price:5,bowls:[5,10,22]},
   {id:"b-bulg",store:"bulkbarn",section:"Grains (bowl bases)",name:"Bulgur, 500g",price:4,bowls:["STAPLE"]},
   {id:"b-brown",store:"bulkbarn",section:"Grains (bowl bases)",name:"Brown rice, 1 kg",price:4,bowls:[3]},
   {id:"b-jasm",store:"bulkbarn",section:"Grains (bowl bases)",name:"Jasmine rice, 1 kg",price:4,bowls:[1,6,8,9,11,19]},
@@ -346,8 +411,30 @@ if(activeBowls==null){
   activeBowls=(old==null)?[]:[old];
   save(LS_BOWLS,activeBowls);
 }
-const tabsEl=document.getElementById("tabs"),recipeGrid=document.getElementById("recipeGrid"),contentEl=document.getElementById("content"),weekGrid=document.getElementById("weekGrid");
+const tabsEl=document.getElementById("tabs"),recipeGrid=document.getElementById("recipeGrid"),contentEl=document.getElementById("content"),weekGrid=document.getElementById("weekGrid"),recipeDetailEl=document.getElementById("recipeDetail");
 function renderTabs(){tabsEl.innerHTML="";STORES.forEach(s=>{const c=s.id==="all"?ITEMS.length:ITEMS.filter(i=>i.store===s.id).length;const b=document.createElement("button");b.className="tab"+(s.id===activeStore?" active":"");b.innerHTML=`${s.label}<span class="count">${c}</span>`;b.onclick=()=>{activeStore=s.id;save(LS_STORE,activeStore);renderTabs();renderContent()};tabsEl.appendChild(b)})}
+function renderRecipeDetail(){
+  // Show the mise-en-place panel when exactly one bowl with a recipe
+  // is selected. Multi-select planning view stays clean (no overflow).
+  if(activeBowls.length!==1||!BOWL_RECIPES[activeBowls[0]]){
+    recipeDetailEl.style.display="none";
+    recipeDetailEl.innerHTML="";
+    return;
+  }
+  const n=activeBowls[0];
+  const bowl=BOWLS.find(b=>b.n===n);
+  const r=BOWL_RECIPES[n];
+  let html=`<h3>Bowl #${n} — ${bowl.name.split(" + ")[0]}</h3>`;
+  if(r.headline)html+=`<p class="headline">${r.headline}</p>`;
+  if(r.serves)html+=`<p class="serves">${r.serves}</p>`;
+  for(const sec of r.sections){
+    html+=`<h4>${sec.title}</h4><ol>`;
+    for(const step of sec.steps)html+=`<li>${step}</li>`;
+    html+=`</ol>`;
+  }
+  recipeDetailEl.innerHTML=html;
+  recipeDetailEl.style.display="block";
+}
 function renderRecipes(){
   recipeGrid.innerHTML="";
   BOWLS.forEach(b=>{
@@ -396,14 +483,14 @@ function renderWeek(){
     clearBtn.className="btn";
     clearBtn.style.fontSize="12px";
     clearBtn.textContent=`Clear filter (${activeBowls.length})`;
-    clearBtn.onclick=()=>{activeBowls=[];save(LS_BOWLS,activeBowls);renderRecipes();renderWeek();renderContent()};
+    clearBtn.onclick=()=>{activeBowls=[];save(LS_BOWLS,activeBowls);renderRecipes();renderWeek();renderRecipeDetail();renderContent()};
     buttonsRow.appendChild(clearBtn);
   }
 }
 // Pass the active-bowls array. Empty array → no filter, show everything.
 // Otherwise an item matches if it's tagged with ANY of the selected bowls.
 function itemMatchesBowls(i,bowlsArr){if(!bowlsArr||!bowlsArr.length)return true;if(!i.bowls||!i.bowls.length)return false;return i.bowls.some(b=>bowlsArr.includes(b))}
-function toggleBowl(n){const i=activeBowls.indexOf(n);if(i>=0)activeBowls.splice(i,1);else activeBowls.push(n);save(LS_BOWLS,activeBowls);renderRecipes();renderWeek();renderContent()}
+function toggleBowl(n){const i=activeBowls.indexOf(n);if(i>=0)activeBowls.splice(i,1);else activeBowls.push(n);save(LS_BOWLS,activeBowls);renderRecipes();renderWeek();renderRecipeDetail();renderContent()}
 function renderContent(){
   contentEl.innerHTML="";
   const stores=activeStore==="all"?STORES.filter(s=>s.id!=="all").map(s=>s.id):[activeStore];
@@ -498,7 +585,7 @@ function updateTotals(){
   document.getElementById("bar").style.width=p+"%";
 }
 document.getElementById("resetBtn").addEventListener("click",()=>{if(!confirm("Reset all items? (clears both ‘got’ and ‘have’ marks)"))return;marked={};save(LS_MARKED,marked);renderContent()});
-renderTabs();renderRecipes();renderWeek();renderContent();
+renderTabs();renderRecipes();renderWeek();renderRecipeDetail();renderContent();
 </script>
 </body>
 </html>
